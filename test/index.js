@@ -21,18 +21,19 @@ lab.describe('Facility Proxy', function() {
   });
 
   lab.before(function(next) {
-    var facilityData = {
-      rows: [
-        ['', 'missing', 'za MomConnect Missing'],
-        EXPECTED_FACILITY
-      ]
-    };
-    var requestListener = function(req, res) {
+    var server = HTTP.createServer();
+    server.once('request', function(req, res) {
+      var facilityData = {
+        rows: [
+          ['', 'missing', 'za MomConnect Missing'],
+          EXPECTED_FACILITY
+        ]
+      };
       res.writeHead(200, {'Content-Type': 'application/json'});
       res.end(JSON.stringify(facilityData));
       next();
-    };
-    HTTP.createServer(requestListener).listen(8002, function() {
+    });
+    server.listen(8002, function() {
       // Start the app
       require('../lib');
     });
