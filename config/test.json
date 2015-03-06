@@ -1,0 +1,9 @@
+{
+  "dhis": {
+    "url": "http://localhost:8002/"
+  },
+
+  "logging": {
+    "level": "error"
+  }
+}

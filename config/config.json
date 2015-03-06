@@ -1,0 +1,22 @@
+{
+  "port": 8001,
+
+  "dhis": {
+    "url": "http://localhost/",
+    "path": "/staging/api/sqlViews/Cj0HSoDpa0P/data.json"
+  },
+
+  "cron": {
+    "pattern": "00 00 00 * * *",
+    "timezone": "Africa/Johannesburg"
+  },
+
+  "logging": {
+    "level": "info"
+  },
+
+  "statsd": {
+    "host": "localhost",
+    "port": 8125
+  }
+}
