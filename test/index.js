@@ -8,6 +8,11 @@ var Needle = require('needle');
 var Path = require('path');
 
 var EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing'];
+var EXPECTED_HEADERS = [
+  {name: 'value', column: 'value', type: 'java.lang.String', hidden: false, meta: false},
+  {name: 'uid', column: 'uid', type: 'java.lang.String', hidden: false, meta: false},
+  {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
+];
 var URL = 'http://localhost:8001/staging/api/sqlViews/Cj0HSoDpa0P/data.json';
 
 var expect = Chai.expect;
@@ -24,6 +29,7 @@ lab.describe('Facility Proxy', function() {
     var server = HTTP.createServer();
     server.once('request', function(req, res) {
       var facilityData = {
+        headers: EXPECTED_HEADERS,
         rows: [
           ['', 'missing', 'za MomConnect Missing'],
           EXPECTED_FACILITY
@@ -49,6 +55,7 @@ lab.describe('Facility Proxy', function() {
             return next(err);
           }
           expect(res.statusCode).to.equal(400);
+          expect(res.body).to.equal('Missing query criteria');
           next();
         });
       });
@@ -62,6 +69,7 @@ lab.describe('Facility Proxy', function() {
             return next(err);
           }
           expect(res.statusCode).to.equal(400);
+          expect(res.body).to.equal('Missing or invalid criteria value');
           next();
         });
       });
@@ -75,6 +83,7 @@ lab.describe('Facility Proxy', function() {
             return next(err);
           }
           expect(res.statusCode).to.equal(400);
+          expect(res.body).to.equal('Missing or invalid criteria value');
           next();
         });
       });
@@ -101,6 +110,7 @@ lab.describe('Facility Proxy', function() {
             return next(err);
           }
           expect(res.statusCode).to.equal(200);
+          expect(res.body.headers).to.deep.equal(EXPECTED_HEADERS);
           expect(res.body.rows[0]).to.deep.equal(EXPECTED_FACILITY);
           next();
         });
