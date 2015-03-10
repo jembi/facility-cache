@@ -102,10 +102,25 @@ lab.describe('Facility Proxy', function() {
       });
     });
 
-    lab.describe('with an existing facility code', function() {
+    lab.describe('with an existing facility code queried by value', function() {
 
       lab.it('should return a 200 reponse code and the expected facility', function(next) {
         Needle.get(URL + '?criteria=value:654321', function(err, res) {
+          if (err) {
+            return next(err);
+          }
+          expect(res.statusCode).to.equal(200);
+          expect(res.body.headers).to.deep.equal(EXPECTED_HEADERS);
+          expect(res.body.rows[0]).to.deep.equal(EXPECTED_FACILITY);
+          next();
+        });
+      });
+    });
+
+    lab.describe('with an existing facility code queried by code', function() {
+
+      lab.it('should return a 200 reponse code and the expected facility', function(next) {
+        Needle.get(URL + '?criteria=code:654321', function(err, res) {
           if (err) {
             return next(err);
           }
