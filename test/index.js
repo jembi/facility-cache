@@ -1,6 +1,5 @@
 'use strict';
 
-var Chai = require('chai');
 var HTTP = require('http');
 var Lab = require('lab');
 var LevelDown = require('leveldown');
@@ -15,7 +14,7 @@ var EXPECTED_HEADERS = [
 ];
 var URL = 'http://localhost:8001/staging/api/sqlViews/Cj0HSoDpa0P/data.json';
 
-var expect = Chai.expect;
+var expect = Lab.assertions;
 var lab = exports.lab = Lab.script();
 
 lab.describe('Facility Proxy', function() {
@@ -57,9 +56,9 @@ lab.describe('Facility Proxy', function() {
           }
           expect(res.statusCode).to.equal(400);
           expect(res.body.width).to.equal(0);
-          expect(res.body.headers).to.be.empty;
+          expect(res.body.headers).to.be.empty();
           expect(res.body.height).to.equal(0);
-          expect(res.body.rows).to.be.empty;
+          expect(res.body.rows).to.be.empty();
           next();
         });
       });
@@ -74,9 +73,9 @@ lab.describe('Facility Proxy', function() {
           }
           expect(res.statusCode).to.equal(400);
           expect(res.body.width).to.equal(0);
-          expect(res.body.headers).to.be.empty;
+          expect(res.body.headers).to.be.empty();
           expect(res.body.height).to.equal(0);
-          expect(res.body.rows).to.be.empty;
+          expect(res.body.rows).to.be.empty();
           next();
         });
       });
@@ -91,9 +90,9 @@ lab.describe('Facility Proxy', function() {
           }
           expect(res.statusCode).to.equal(400);
           expect(res.body.width).to.equal(0);
-          expect(res.body.headers).to.be.empty;
+          expect(res.body.headers).to.be.empty();
           expect(res.body.height).to.equal(0);
-          expect(res.body.rows).to.be.empty;
+          expect(res.body.rows).to.be.empty();
           next();
         });
       });
@@ -108,9 +107,9 @@ lab.describe('Facility Proxy', function() {
           }
           expect(res.statusCode).to.equal(404);
           expect(res.body.width).to.equal(0);
-          expect(res.body.headers).to.be.empty;
+          expect(res.body.headers).to.be.empty();
           expect(res.body.height).to.equal(0);
-          expect(res.body.rows).to.be.empty;
+          expect(res.body.rows).to.be.empty();
           next();
         });
       });
@@ -126,9 +125,9 @@ lab.describe('Facility Proxy', function() {
           expect(res.statusCode).to.equal(200);
           expect(res.body.title).to.equal('FacilityRegistry');
           expect(res.body.width).to.equal(3);
-          expect(res.body.headers).to.deep.equal(EXPECTED_HEADERS);
+          expect(res.body.headers).to.eql(EXPECTED_HEADERS);
           expect(res.body.height).to.equal(1);
-          expect(res.body.rows[0]).to.deep.equal(EXPECTED_FACILITY);
+          expect(res.body.rows[0]).to.eql(EXPECTED_FACILITY);
           next();
         });
       });
@@ -144,9 +143,9 @@ lab.describe('Facility Proxy', function() {
           expect(res.statusCode).to.equal(200);
           expect(res.body.title).to.equal('FacilityRegistry');
           expect(res.body.width).to.equal(3);
-          expect(res.body.headers).to.deep.equal(EXPECTED_HEADERS);
+          expect(res.body.headers).to.eql(EXPECTED_HEADERS);
           expect(res.body.height).to.equal(1);
-          expect(res.body.rows[0]).to.deep.equal(EXPECTED_FACILITY);
+          expect(res.body.rows[0]).to.eql(EXPECTED_FACILITY);
           next();
         });
       });
