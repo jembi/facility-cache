@@ -29,6 +29,7 @@ lab.describe('Facility Proxy', function() {
     var server = HTTP.createServer();
     server.once('request', function(req, res) {
       var facilityData = {
+        title: 'FacilityRegistry',
         headers: EXPECTED_HEADERS,
         rows: [
           ['', 'missing', 'za MomConnect Missing'],
@@ -55,7 +56,10 @@ lab.describe('Facility Proxy', function() {
             return next(err);
           }
           expect(res.statusCode).to.equal(400);
-          expect(res.body).to.equal('Missing query criteria');
+          expect(res.body.width).to.equal(0);
+          expect(res.body.headers).to.be.empty;
+          expect(res.body.height).to.equal(0);
+          expect(res.body.rows).to.be.empty;
           next();
         });
       });
@@ -69,7 +73,10 @@ lab.describe('Facility Proxy', function() {
             return next(err);
           }
           expect(res.statusCode).to.equal(400);
-          expect(res.body).to.equal('Missing or invalid criteria value');
+          expect(res.body.width).to.equal(0);
+          expect(res.body.headers).to.be.empty;
+          expect(res.body.height).to.equal(0);
+          expect(res.body.rows).to.be.empty;
           next();
         });
       });
@@ -83,7 +90,10 @@ lab.describe('Facility Proxy', function() {
             return next(err);
           }
           expect(res.statusCode).to.equal(400);
-          expect(res.body).to.equal('Missing or invalid criteria value');
+          expect(res.body.width).to.equal(0);
+          expect(res.body.headers).to.be.empty;
+          expect(res.body.height).to.equal(0);
+          expect(res.body.rows).to.be.empty;
           next();
         });
       });
@@ -97,6 +107,10 @@ lab.describe('Facility Proxy', function() {
             return next(err);
           }
           expect(res.statusCode).to.equal(404);
+          expect(res.body.width).to.equal(0);
+          expect(res.body.headers).to.be.empty;
+          expect(res.body.height).to.equal(0);
+          expect(res.body.rows).to.be.empty;
           next();
         });
       });
@@ -110,7 +124,10 @@ lab.describe('Facility Proxy', function() {
             return next(err);
           }
           expect(res.statusCode).to.equal(200);
+          expect(res.body.title).to.equal('FacilityRegistry');
+          expect(res.body.width).to.equal(3);
           expect(res.body.headers).to.deep.equal(EXPECTED_HEADERS);
+          expect(res.body.height).to.equal(1);
           expect(res.body.rows[0]).to.deep.equal(EXPECTED_FACILITY);
           next();
         });
@@ -125,7 +142,10 @@ lab.describe('Facility Proxy', function() {
             return next(err);
           }
           expect(res.statusCode).to.equal(200);
+          expect(res.body.title).to.equal('FacilityRegistry');
+          expect(res.body.width).to.equal(3);
           expect(res.body.headers).to.deep.equal(EXPECTED_HEADERS);
+          expect(res.body.height).to.equal(1);
           expect(res.body.rows[0]).to.deep.equal(EXPECTED_FACILITY);
           next();
         });
