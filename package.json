@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "confit": "^1.2.0",
+    "confit": "^2.0.3",
     "cron": "^1.0.8",
     "express": "^4.12.2",
     "leveldown": "^0.10.4",
