@@ -49,12 +49,12 @@ lab.describe('Facility Proxy', function() {
 
     lab.describe('with no criteria query parameter', function() {
 
-      lab.it('should return a 400 reponse code', function(next) {
+      lab.it('should return a 200 reponse code and no facility data', function(next) {
         Needle.get(URL, function(err, res) {
           if (err) {
             return next(err);
           }
-          expect(res.statusCode).to.equal(400);
+          expect(res.statusCode).to.equal(200);
           expect(res.body.width).to.equal(0);
           expect(res.body.headers).to.be.empty();
           expect(res.body.height).to.equal(0);
@@ -66,12 +66,12 @@ lab.describe('Facility Proxy', function() {
 
     lab.describe('with no criteria value', function() {
 
-      lab.it('should return a 400 reponse code', function(next) {
+      lab.it('should return a 200 reponse code and no facility data', function(next) {
         Needle.get(URL + '?criteria=fail', function(err, res) {
           if (err) {
             return next(err);
           }
-          expect(res.statusCode).to.equal(400);
+          expect(res.statusCode).to.equal(200);
           expect(res.body.width).to.equal(0);
           expect(res.body.headers).to.be.empty();
           expect(res.body.height).to.equal(0);
@@ -83,12 +83,12 @@ lab.describe('Facility Proxy', function() {
 
     lab.describe('with an invalid criteria value', function() {
 
-      lab.it('should return a 400 reponse code', function(next) {
+      lab.it('should return a 200 reponse code and no facility data', function(next) {
         Needle.get(URL + '?criteria=value:fail', function(err, res) {
           if (err) {
             return next(err);
           }
-          expect(res.statusCode).to.equal(400);
+          expect(res.statusCode).to.equal(200);
           expect(res.body.width).to.equal(0);
           expect(res.body.headers).to.be.empty();
           expect(res.body.height).to.equal(0);
@@ -100,12 +100,12 @@ lab.describe('Facility Proxy', function() {
 
     lab.describe('with a non-existent facility code', function() {
 
-      lab.it('should return a 404 reponse code', function(next) {
+      lab.it('should return a 200 reponse code and no facility data', function(next) {
         Needle.get(URL + '?criteria=value:123456', function(err, res) {
           if (err) {
             return next(err);
           }
-          expect(res.statusCode).to.equal(404);
+          expect(res.statusCode).to.equal(200);
           expect(res.body.width).to.equal(0);
           expect(res.body.headers).to.be.empty();
           expect(res.body.height).to.equal(0);
