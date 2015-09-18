@@ -2,7 +2,7 @@
 
 var HTTP = require('http');
 var Lab = require('lab');
-var LevelDown = require('leveldown');
+var Level = require('level');
 var Needle = require('needle');
 var Path = require('path');
 
@@ -21,7 +21,7 @@ lab.describe('Facility Proxy', function() {
 
   lab.before(function(next) {
     var path = Path.join(__dirname, '..', 'data');
-    LevelDown.destroy(path, next);
+    Level.destroy(path, next);
   });
 
   lab.before(function(next) {
