@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "dependencies": {
     "confit": "^2.0.3",
     "cron": "^1.0.8",
