@@ -45,6 +45,19 @@ lab.describe('Facility Proxy', function() {
     });
   });
 
+  lab.describe('Heartbeat', function() {
+
+    lab.it('should return the process uptime', function(next) {
+      Needle.get('http://localhost:8001/heartbeat', function(err, res) {
+        if (err) {
+          return next(err);
+        }
+        expect(res.body.uptime).to.be.a.number();
+        next();
+      });
+    });
+  });
+
   lab.describe('API calls', function() {
 
     lab.describe('with no criteria query parameter', function() {
