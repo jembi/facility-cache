@@ -1,0 +1,56 @@
+{
+  "urn": "urn:mediator:facility-cache",
+  "version": "1.0.0",
+  "name": "OpenHIM Facility Cache Mediator",
+  "description": "OpenHIM Mediator for facility cache",
+  "endpoints": [
+    {
+      "name": "Facility Cache Mediator",
+      "host": "localhost",
+      "port": "8001",
+      "type": "http"
+    }
+  ],
+  "configDefs": [
+    {
+      "param": "routes",
+      "displayName": "Routes",
+      "description": "Locations of facilities to cache",
+      "type": "struct",
+      "array": true,
+      "template": [
+        {
+          "param": "dhisUrl",
+          "displayName": "DHIS Url",
+          "description": "DHIS url",
+          "type": "string"
+        }, {
+          "param": "dhisPath",
+          "displayName": "DHIS Path",
+          "description": "DHIS sql view path",
+          "type": "string"
+        }, {
+          "param": "cronPattern",
+          "displayName": "Cron Pattern",
+          "description": "Cron pattern",
+          "type": "string"
+        }, {
+          "param": "cronTimezone",
+          "displayName": "Cron Timezone",
+          "description": "Timezone of the cron",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "config": {
+    "routes": [
+      {
+        "dhisUrl": "http://admin:district@localhost:8081/",
+        "dhisPath": "/api/sqlViews/JC25d500rtI/data.json",
+        "cronPattern": "00 00 00 * * *",
+        "cronTimezone": "Africa/Johannesburg"
+      }
+    ]
+  }
+}

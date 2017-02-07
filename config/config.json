@@ -1,22 +1,26 @@
 {
-  "port": 8001,
-
-  "dhis": {
-    "url": "http://localhost/",
-    "path": "/staging/api/sqlViews/Cj0HSoDpa0P/data.json"
+  "server": {
+    "hostname": "localhost",
+    "port": 8001
   },
-
-  "cron": {
-    "pattern": "00 00 00 * * *",
-    "timezone": "Africa/Johannesburg"
-  },
-
-  "logging": {
+  
+  "logger": {
     "level": "info"
   },
-
+  
   "statsd": {
     "host": "localhost",
     "port": 8125
+  },
+  
+  "openhim": {
+    "api" : {
+      "username": "root@openhim.org",
+      "password": "password",
+      "apiURL": "https://localhost:8080",
+      "trustSelfSigned": true
+    },
+    "register": false,
+    "heartbeat": true
   }
 }
