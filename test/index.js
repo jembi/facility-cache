@@ -2,7 +2,6 @@
 
 var HTTP = require('http');
 var Lab = require('lab');
-var Level = require('level');
 var Needle = require('needle');
 var Path = require('path');
 
@@ -16,16 +15,12 @@ var URL = 'http://localhost:8001/staging/api/sqlViews/Cj0HSoDpa0P/data.json';
 
 var expect = Lab.assertions;
 var lab = exports.lab = Lab.script();
+var facilityCache;
+var server = HTTP.createServer();
 
 lab.describe('Facility Proxy', function() {
 
   lab.before(function(next) {
-    var path = Path.join(__dirname, '..', 'data');
-    Level.destroy(path, next);
-  });
-
-  lab.before(function(next) {
-    var server = HTTP.createServer();
     server.once('request', function(req, res) {
       var facilityData = {
         title: 'FacilityRegistry',
@@ -41,9 +36,20 @@ lab.describe('Facility Proxy', function() {
     });
     server.listen(8002, function() {
       // Start the app
-      require('../lib');
+      facilityCache = require('../lib');
+      facilityCache.start((err) => {
+        if(err) {throw err}
+      })
     });
   });
+  
+  lab.after(function(next) {
+    server.close(() => {
+      facilityCache.stop(() => {
+        next()
+      })
+    })
+  })
 
   lab.describe('Heartbeat', function() {
 

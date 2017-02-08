@@ -1,9 +1,26 @@
 {
-  "dhis": {
-    "url": "http://localhost:8002/"
+  "server": {
+    "hostname": "localhost",
+    "port": 8001
   },
-
-  "logging": {
+  
+  "logger": {
     "level": "error"
+  },
+  
+  "statsd": {
+    "host": "localhost",
+    "port": 8125
+  },
+  
+  "openhim": {
+    "api" : {
+      "username": "root@openhim.org",
+      "password": "password",
+      "apiURL": "https://localhost:8080",
+      "trustSelfSigned": true
+    },
+    "register": false,
+    "heartbeat": true
   }
 }

@@ -46,8 +46,8 @@
   "config": {
     "routes": [
       {
-        "dhisUrl": "http://admin:district@localhost:8081/",
-        "dhisPath": "/api/sqlViews/JC25d500rtI/data.json",
+        "dhisUrl": "http://admin:district@localhost:8002",
+        "dhisPath": "/staging/api/sqlViews/Cj0HSoDpa0P/data.json",
         "cronPattern": "00 00 00 * * *",
         "cronTimezone": "Africa/Johannesburg"
       }
