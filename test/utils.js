@@ -7,6 +7,7 @@ var Level = require('level');
 var Path = require('path');
 var Cache = require('../lib/cache');
 var HTTP = require('http');
+var findRoute = require('express-remove-route').findRoute
 
 var EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing'];
 var EXPECTED_HEADERS = [
@@ -19,17 +20,33 @@ var URL = 'http://localhost:8001/staging/api/sqlViews/Cj0HSoDpa0P/data.json';
 var expect = Lab.assertions;
 var lab = exports.lab = Lab.script();
 
-let newConfig = [{
-  "dhisUrl": "http://localhost:8000",
-  "dhisPath": "/api/sqlViews/2",
-  "cronPattern": "* * * *",
-  "cronTimezone": "UCT"
-}, {
-  "dhisUrl": "http://localhost:8000",
-  "dhisPath": "/api/sqlViews/2",
-  "cronPattern": "* * * * *",
-  "cronTimezone": "UCT"
-}]
+let config1 = {
+  routes: [{
+    "dhisUrl": "http://localhost:8000",
+    "dhisPath": "/api/sqlViews/1",
+    "cronPattern": "* * * *",
+    "cronTimezone": "UCT"
+  }, {
+    "dhisUrl": "http://localhost:8000",
+    "dhisPath": "/api/sqlViews/2",
+    "cronPattern": "* * * * *",
+    "cronTimezone": "UCT"
+  }]
+}
+
+let config2 = {
+  routes: [{
+    "dhisUrl": "http://localhost:8000",
+    "dhisPath": "/api/sqlViews/3",
+    "cronPattern": "* * * *",
+    "cronTimezone": "UCT"
+  }, {
+    "dhisUrl": "http://localhost:8000",
+    "dhisPath": "/api/sqlViews/2",
+    "cronPattern": "* * * * *",
+    "cronTimezone": "UCT"
+  }]
+}
 
 var app
 var facilityCache
@@ -76,15 +93,24 @@ lab.describe('Utils', function() {
 
   lab.describe('Update Config', function() {
 
-    lab.it('should update the cron jobs with the new config', function(next) {
-      Utils.updateConfig(app, mediatorConfig.config, newConfig)
-      console.log(Utils.cronJobs)
+    lab.it('should update the cron and routes with the new config', function(next) {
+      Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
+      // console.log(Utils.cronJobs)
+      expect(Object.keys(Utils.cronJobs)[0]).to.equal('http://localhost:8000/api/sqlViews/1');
+      expect(Object.keys(Utils.cronJobs)[1]).to.equal('http://localhost:8000/api/sqlViews/2');
+      expect(findRoute(app, '/api/sqlViews/1').route.route.path).to.equal('/api/sqlViews/1')
+      expect(findRoute(app, '/api/sqlViews/2').route.route.path).to.equal('/api/sqlViews/2')
+      expect(findRoute(app, '/staging/api/sqlViews/Cj0HSoDpa0P/data.json').route.route).to.not.exist()
       next();
     });
     
-    lab.it('should update the express routes with the new config', function(next) {
-      Utils.updateConfig(app, mediatorConfig.config, newConfig)
-      console.log(Utils.cronJobs)
+    lab.it('should update the cron and routes with the new config', function(next) {
+      Utils.updateConfig(app, config1.routes, config2.routes)
+      expect(Object.keys(Utils.cronJobs)[0]).to.equal('http://localhost:8000/api/sqlViews/3');
+      expect(Object.keys(Utils.cronJobs)[1]).to.equal('http://localhost:8000/api/sqlViews/2');
+      expect(findRoute(app, '/api/sqlViews/3').route.route.path).to.equal('/api/sqlViews/3')
+      expect(findRoute(app, '/api/sqlViews/2').route.route.path).to.equal('/api/sqlViews/2')
+      expect(findRoute(app, '/api/sqlViews/1').route.route).to.not.exist()
       next();
     });
   });
