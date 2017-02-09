@@ -15,7 +15,8 @@
   },
   "devDependencies": {
     "lab": "^12.1.0",
-    "must": "^0.13.4"
+    "must": "^0.13.4",
+    "standard": "^8.6.0"
   },
   "scripts": {
     "start": "node lib/index",
