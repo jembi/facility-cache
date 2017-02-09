@@ -1,11 +1,11 @@
 'use strict'
 
-var HTTP = require('http')
-var Lab = require('lab')
-var Needle = require('needle')
+const HTTP = require('http')
+const Lab = require('lab')
+const Needle = require('needle')
 
-var EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
-var EXPECTED_HEADERS = [
+const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
+const EXPECTED_HEADERS = [
   {name: 'value', column: 'value', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'uid', column: 'uid', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}

@@ -1,14 +1,14 @@
 'use strict'
 
-var Lab = require('lab')
-var Utils = require('../lib/utils')
+const Lab = require('lab')
+const Utils = require('../lib/utils')
 const mediatorConfig = require('../config/mediator')
-var Cache = require('../lib/cache')
-var HTTP = require('http')
-var findRoute = require('express-remove-route').findRoute
+const Cache = require('../lib/cache')
+const HTTP = require('http')
+const findRoute = require('express-remove-route').findRoute
 
-var EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
-var EXPECTED_HEADERS = [
+const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
+const EXPECTED_HEADERS = [
   {name: 'value', column: 'value', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'uid', column: 'uid', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
