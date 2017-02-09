@@ -22,12 +22,12 @@ let config1 = {
     'dhisUrl': 'http://localhost:8000',
     'dhisPath': '/api/sqlViews/1',
     'cronPattern': '* * * *',
-    'cronTimezone': 'UCT'
+    'cronTimezone': 'Africa/Johannesburg'
   }, {
     'dhisUrl': 'http://localhost:8000',
     'dhisPath': '/api/sqlViews/2',
     'cronPattern': '* * * * *',
-    'cronTimezone': 'UCT'
+    'cronTimezone': 'Africa/Johannesburg'
   }]
 }
 
@@ -36,12 +36,21 @@ let config2 = {
     'dhisUrl': 'http://localhost:8000',
     'dhisPath': '/api/sqlViews/3',
     'cronPattern': '* * * *',
-    'cronTimezone': 'UCT'
+    'cronTimezone': 'Africa/Johannesburg'
   }, {
     'dhisUrl': 'http://localhost:8000',
     'dhisPath': '/api/sqlViews/2',
     'cronPattern': '* * * * *',
-    'cronTimezone': 'UCT'
+    'cronTimezone': 'Africa/Johannesburg'
+  }]
+}
+
+let config3 = {
+  routes: [{
+    'dhisUrl': 'http://localhost:8000',
+    'dhisPath': '/api/sqlViews/3',
+    'cronPattern': '0 0 0 0 0',
+    'cronTimezone': 'Africa/Johannesburg'
   }]
 }
 
@@ -89,9 +98,11 @@ lab.describe('Utils', function () {
   lab.describe('Update Config', function () {
     lab.it('should update the cron and routes with the new config', function (next) {
       Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
-      // console.log(Utils.cronJobs)
-      expect(Object.keys(Utils.cronJobs)[0]).to.equal('http://localhost:8000/api/sqlViews/1')
-      expect(Object.keys(Utils.cronJobs)[1]).to.equal('http://localhost:8000/api/sqlViews/2')
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/1']).to.exist()
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2']).to.exist()
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'].cronTime.source).to.equal('* * * * *')
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/1'].cronTime.source).to.equal('* * * *')
+      expect(Utils.cronJobs['http://admin:district@localhost:8002/staging/api/sqlViews/Cj0HSoDpa0P/data.json']).to.not.exist()
       expect(findRoute(app, '/api/sqlViews/1').route.route.path).to.equal('/api/sqlViews/1')
       expect(findRoute(app, '/api/sqlViews/2').route.route.path).to.equal('/api/sqlViews/2')
       expect(findRoute(app, '/staging/api/sqlViews/Cj0HSoDpa0P/data.json').route.route).to.not.exist()
@@ -100,11 +111,24 @@ lab.describe('Utils', function () {
 
     lab.it('should update the cron and routes with the new config', function (next) {
       Utils.updateConfig(app, config1.routes, config2.routes)
-      expect(Object.keys(Utils.cronJobs)[0]).to.equal('http://localhost:8000/api/sqlViews/3')
-      expect(Object.keys(Utils.cronJobs)[1]).to.equal('http://localhost:8000/api/sqlViews/2')
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2']).to.exist()
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/3']).to.exist()
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'].cronTime.source).to.equal('* * * * *')
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/3'].cronTime.source).to.equal('* * * *')
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/1']).to.not.exist()
       expect(findRoute(app, '/api/sqlViews/3').route.route.path).to.equal('/api/sqlViews/3')
       expect(findRoute(app, '/api/sqlViews/2').route.route.path).to.equal('/api/sqlViews/2')
       expect(findRoute(app, '/api/sqlViews/1').route.route).to.not.exist()
+      next()
+    })
+    
+    lab.it('should update the cron and routes with the new config', function (next) {
+      Utils.updateConfig(app, config2.routes, config3.routes)
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/3']).to.exist()
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2']).to.not.exist()
+      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/3'].cronTime.source).to.equal('0 0 0 0 0')
+      expect(findRoute(app, '/api/sqlViews/3').route.route.path).to.equal('/api/sqlViews/3')
+      expect(findRoute(app, '/api/sqlViews/2').route.route).to.not.exist()
       next()
     })
   })
