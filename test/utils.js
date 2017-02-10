@@ -82,7 +82,7 @@ lab.describe('Utils', function () {
           throw err
         }
         app = facilityCache.setupApp(mediatorConfig.config, appConfig)
-        facilityCacheServer = app.listen(8001)
+        facilityCacheServer = app.listen(8003)
       })
     })
   })

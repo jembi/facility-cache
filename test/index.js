@@ -13,7 +13,7 @@ const EXPECTED_HEADERS = [
   {name: 'uid', column: 'uid', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
 ]
-const URL = 'http://localhost:8001/api/sqlViews/1/data.json'
+const URL = 'http://localhost:8003/api/sqlViews/1/data.json'
 
 const expect = Lab.assertions
 const lab = exports.lab = Lab.script()
@@ -57,7 +57,7 @@ lab.describe('Facility Proxy', function () {
 
   lab.describe('Heartbeat', function () {
     lab.it('should return the process uptime', function (next) {
-      Needle.get('http://localhost:8001/heartbeat', function (err, res) {
+      Needle.get('http://localhost:8003/heartbeat', function (err, res) {
         if (err) {
           return next(err)
         }
