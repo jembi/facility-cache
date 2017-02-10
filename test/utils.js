@@ -6,6 +6,8 @@ const mediatorConfig = require('../config/mediator')
 const Cache = require('../lib/cache')
 const HTTP = require('http')
 const findRoute = require('express-remove-route').findRoute
+const Level = require('level')
+const Path = require('path')
 
 const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
 const EXPECTED_HEADERS = [
@@ -14,10 +16,10 @@ const EXPECTED_HEADERS = [
   {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
 ]
 
-var expect = Lab.assertions
-var lab = exports.lab = Lab.script()
+const expect = Lab.assertions
+const lab = exports.lab = Lab.script()
 
-let config1 = {
+const config1 = {
   routes: [{
     'dhisUrl': 'http://localhost:8000',
     'dhisPath': '/api/sqlViews/1',
@@ -31,7 +33,7 @@ let config1 = {
   }]
 }
 
-let config2 = {
+const config2 = {
   routes: [{
     'dhisUrl': 'http://localhost:8000',
     'dhisPath': '/api/sqlViews/3',
@@ -45,7 +47,7 @@ let config2 = {
   }]
 }
 
-let config3 = {
+const config3 = {
   routes: [{
     'dhisUrl': 'http://localhost:8000',
     'dhisPath': '/api/sqlViews/3',
@@ -54,15 +56,15 @@ let config3 = {
   }]
 }
 
-var app
-var facilityCache
-var facilityCacheServer
-var server = HTTP.createServer()
+let app
+let facilityCache
+let facilityCacheServer
+const server = HTTP.createServer()
 
 lab.describe('Utils', function () {
   lab.before(function (next) {
     server.once('request', function (req, res) {
-      var facilityData = {
+      const facilityData = {
         title: 'FacilityRegistry',
         headers: EXPECTED_HEADERS,
         rows: [
@@ -87,11 +89,13 @@ lab.describe('Utils', function () {
   })
 
   lab.after(function (next) {
-    facilityCacheServer.on('close', () => {
-      Cache.close(next)
-    })
     server.close(() => {
-      facilityCacheServer.close()
+      facilityCacheServer.close( () => {
+        Cache.close(() => {
+          const path = Path.join(__dirname, '..', 'data');
+          Level.destroy(path, next)
+        })
+      })
     })
   })
 

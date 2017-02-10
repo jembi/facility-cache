@@ -3,6 +3,9 @@
 const HTTP = require('http')
 const Lab = require('lab')
 const Needle = require('needle')
+const Cache = require('../lib/cache')
+const Level = require('level')
+const Path = require('path')
 
 const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
 const EXPECTED_HEADERS = [
@@ -10,17 +13,17 @@ const EXPECTED_HEADERS = [
   {name: 'uid', column: 'uid', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
 ]
-var URL = 'http://localhost:8001/staging/api/sqlViews/Cj0HSoDpa0P/data.json'
+const URL = 'http://localhost:8001/api/sqlViews/1/data.json'
 
-var expect = Lab.assertions
-var lab = exports.lab = Lab.script()
-var facilityCache
-var server = HTTP.createServer()
+const expect = Lab.assertions
+const lab = exports.lab = Lab.script()
+const server = HTTP.createServer()
+let facilityCache
 
 lab.describe('Facility Proxy', function () {
   lab.before(function (next) {
     server.once('request', function (req, res) {
-      var facilityData = {
+      const facilityData = {
         title: 'FacilityRegistry',
         headers: EXPECTED_HEADERS,
         rows: [
@@ -44,7 +47,10 @@ lab.describe('Facility Proxy', function () {
   lab.after(function (next) {
     server.close(() => {
       facilityCache.stop(() => {
-        next()
+        Cache.close(() => {
+          const path = Path.join(__dirname, '..', 'data');
+          Level.destroy(path, next)
+        })
       })
     })
   })

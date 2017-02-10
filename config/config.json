@@ -20,7 +20,7 @@
       "apiURL": "https://localhost:8080",
       "trustSelfSigned": true
     },
-    "register": false,
+    "register": true,
     "heartbeat": true
   }
 }
