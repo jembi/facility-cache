@@ -8,6 +8,7 @@ const HTTP = require('http')
 const findRoute = require('express-remove-route').findRoute
 const Level = require('level')
 const Path = require('path')
+const facilityCache = require('../lib')
 
 const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
 const EXPECTED_HEADERS = [
@@ -57,7 +58,6 @@ const config3 = {
 }
 
 let app
-let facilityCache
 let facilityCacheServer
 const server = HTTP.createServer()
 
@@ -77,20 +77,19 @@ lab.describe('Utils', function () {
       next()
     })
     server.listen(8002, function () {
-      facilityCache = require('../lib')
       facilityCache.setupConfig((err, appConfig) => {
         if (err) {
           throw err
         }
         app = facilityCache.setupApp(mediatorConfig.config, appConfig)
-        facilityCacheServer = app.listen(8001, {})
+        facilityCacheServer = app.listen(8001)
       })
     })
   })
 
   lab.after(function (next) {
     server.close(() => {
-      facilityCacheServer.close( () => {
+      facilityCacheServer.close(() => {
         Cache.close(() => {
           const path = Path.join(__dirname, '..', 'data');
           Level.destroy(path, next)
