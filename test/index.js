@@ -48,7 +48,7 @@ lab.describe('Facility Proxy', function () {
     server.close(() => {
       facilityCache.stop(() => {
         Cache.close(() => {
-          const path = Path.join(__dirname, '..', 'data');
+          const path = Path.join(__dirname, '..', 'data')
           Level.destroy(path, next)
         })
       })

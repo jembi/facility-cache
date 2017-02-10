@@ -91,7 +91,7 @@ lab.describe('Utils', function () {
     server.close(() => {
       facilityCacheServer.close(() => {
         Cache.close(() => {
-          const path = Path.join(__dirname, '..', 'data');
+          const path = Path.join(__dirname, '..', 'data')
           Level.destroy(path, next)
         })
       })
@@ -124,7 +124,7 @@ lab.describe('Utils', function () {
       expect(findRoute(app, '/api/sqlViews/1').route.route).to.not.exist()
       next()
     })
-    
+
     lab.it('should update the cron and routes with the new config', function (next) {
       Utils.updateConfig(app, config2.routes, config3.routes)
       expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/3']).to.exist()
