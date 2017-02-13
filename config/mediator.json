@@ -48,7 +48,7 @@
       {
         "dhisUrl": "http://admin:district@localhost:8002",
         "dhisPath": "/api/sqlViews/1/data.json",
-        "cronPattern": "* * * * * *",
+        "cronPattern": "00 00 12 * * *",
         "cronTimezone": "Africa/Johannesburg"
       }
     ]
