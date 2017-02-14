@@ -4,7 +4,6 @@
     "confit": "^2.1.0",
     "cron": "^1.2.1",
     "express": "^4.14.1",
-    "express-remove-route": "^0.1.1",
     "level": "^1.6.0",
     "level-sublevel": "^6.6.1",
     "mustache": "^2.3.0",
