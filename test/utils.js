@@ -5,7 +5,6 @@ const Utils = require('../lib/utils')
 const mediatorConfig = require('../config/mediator')
 const Cache = require('../lib/cache')
 const HTTP = require('http')
-const findRoute = require('express-remove-route').findRoute
 const Level = require('level')
 const Path = require('path')
 const facilityCache = require('../lib')
@@ -55,6 +54,18 @@ const config3 = {
     'cronPattern': '0 0 0 0 0',
     'cronTimezone': 'Africa/Johannesburg'
   }]
+}
+
+// express 4.14.1 specific
+function findRoute(app, path) {
+  const stack = app._router.stack
+  let flag = false
+  stack.forEach((layer) => {
+    if(layer && path.match(layer.regexp) && layer.name === 'bound dispatch') {
+      flag = true
+    }
+  })
+  return flag
 }
 
 let app
