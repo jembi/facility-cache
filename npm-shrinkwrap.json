@@ -727,11 +727,6 @@
       "from": "express@>=4.14.1 <5.0.0",
       "resolved": "https://registry.npmjs.org/express/-/express-4.14.1.tgz"
     },
-    "express-remove-route": {
-      "version": "0.1.1",
-      "from": "express-remove-route@>=0.1.1 <0.2.0",
-      "resolved": "https://registry.npmjs.org/express-remove-route/-/express-remove-route-0.1.1.tgz"
-    },
     "extend": {
       "version": "3.0.0",
       "from": "extend@>=3.0.0 <3.1.0",
