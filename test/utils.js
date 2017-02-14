@@ -90,7 +90,7 @@ lab.describe('Utils', function () {
   lab.after(function (next) {
     server.close(() => {
       facilityCacheServer.close(() => {
-        Cache.close(() => {
+        Cache.db.close(() => {
           const path = Path.join(__dirname, '..', 'data')
           Level.destroy(path, next)
         })
