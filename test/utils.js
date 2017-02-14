@@ -61,7 +61,7 @@ function findRoute(app, path) {
   const stack = app._router.stack
   let flag = false
   stack.forEach((layer) => {
-    if(layer && path.match(layer.regexp) && layer.name === 'bound dispatch') {
+    if(layer && layer.route && layer.route.path === path) {
       flag = true
     }
   })
