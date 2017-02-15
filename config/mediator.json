@@ -1,6 +1,6 @@
 {
   "urn": "urn:mediator:facility-cache",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "name": "OpenHIM Facility Cache Mediator",
   "description": "OpenHIM Mediator for facility cache",
   "endpoints": [
@@ -27,7 +27,7 @@
         }, {
           "param": "dhisPath",
           "displayName": "DHIS Path",
-          "description": "DHIS sql view path",
+          "description": "DHIS sql view path. NB! Please ensure that no two DHIS Path's are the same, as the cache will be overwritten by the other",
           "type": "string"
         }, {
           "param": "cronPattern",
