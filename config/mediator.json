@@ -1,6 +1,6 @@
 {
   "urn": "urn:mediator:facility-cache",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "name": "OpenHIM Facility Cache Mediator",
   "description": "OpenHIM Mediator for facility cache",
   "endpoints": [
