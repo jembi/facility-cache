@@ -1,3 +1,5 @@
+'use strict'
+
 const HTTP = require('http')
 const Lab = require('lab')
 const Path = require('path')
