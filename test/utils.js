@@ -101,9 +101,9 @@ lab.describe('Utils', function () {
   lab.afterEach(function (next) {
     server.close(() => {
       facilityCacheServer.close(() => {
-        Cache.db.close(() => {
+        Cache.close(() => {
           Utils.resetCronJobs()
-          const path = Path.join(__dirname, '..', 'data')
+          const path = Path.join(__dirname, '..', 'cache')
           Level.destroy(path, next)
         })
       })

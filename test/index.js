@@ -13,7 +13,7 @@ const EXPECTED_HEADERS = [
   {name: 'uid', column: 'uid', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
 ]
-const URL = 'http://localhost:8003/api/sqlViews/1/data.json'
+const URL = 'http://admin:district@localhost:8003/api/sqlViews/1/data.json'
 
 const expect = Lab.assertions
 const lab = exports.lab = Lab.script()
@@ -47,8 +47,8 @@ lab.describe('Facility Proxy', function () {
   lab.after(function (next) {
     server.close(() => {
       facilityCache.stop(() => {
-        Cache.db.close(() => {
-          const path = Path.join(__dirname, '..', 'data')
+        Cache.close(() => {
+          const path = Path.join(__dirname, '..', 'cache')
           Level.destroy(path, next)
         })
       })
@@ -69,7 +69,7 @@ lab.describe('Facility Proxy', function () {
 
   lab.describe('API calls', function () {
     lab.describe('with no criteria query parameter', function () {
-      lab.it('should return a 200 reponse code and no facility data', function (next) {
+      lab.it('should return a 200 response code and no facility data', function (next) {
         Needle.get(URL, function (err, res) {
           if (err) {
             return next(err)
@@ -85,7 +85,7 @@ lab.describe('Facility Proxy', function () {
     })
 
     lab.describe('with no criteria value', function () {
-      lab.it('should return a 200 reponse code and no facility data', function (next) {
+      lab.it('should return a 200 response code and no facility data', function (next) {
         Needle.get(URL + '?criteria=fail', function (err, res) {
           if (err) {
             return next(err)
@@ -101,7 +101,7 @@ lab.describe('Facility Proxy', function () {
     })
 
     lab.describe('with an invalid criteria value', function () {
-      lab.it('should return a 200 reponse code and no facility data', function (next) {
+      lab.it('should return a 200 response code and no facility data', function (next) {
         Needle.get(URL + '?criteria=value:fail', function (err, res) {
           if (err) {
             return next(err)
@@ -117,7 +117,7 @@ lab.describe('Facility Proxy', function () {
     })
 
     lab.describe('with a non-existent facility code', function () {
-      lab.it('should return a 200 reponse code and no facility data', function (next) {
+      lab.it('should return a 200 response code and no facility data', function (next) {
         Needle.get(URL + '?criteria=value:123456', function (err, res) {
           if (err) {
             return next(err)
@@ -133,11 +133,12 @@ lab.describe('Facility Proxy', function () {
     })
 
     lab.describe('with an existing facility code queried by value', function () {
-      lab.it('should return a 200 reponse code and the expected facility', function (next) {
+      lab.it('should return a 200 response code and the expected facility', function (next) {
         Needle.get(URL + '?criteria=value:654321', function (err, res) {
           if (err) {
             return next(err)
           }
+
           expect(res.statusCode).to.equal(200)
           expect(res.body.title).to.equal('FacilityRegistry')
           expect(res.body.width).to.equal(3)
@@ -150,7 +151,7 @@ lab.describe('Facility Proxy', function () {
     })
 
     lab.describe('with an existing facility code queried by code', function () {
-      lab.it('should return a 200 reponse code and the expected facility', function (next) {
+      lab.it('should return a 200 response code and the expected facility', function (next) {
         Needle.get(URL + '?criteria=code:654321', function (err, res) {
           if (err) {
             return next(err)
