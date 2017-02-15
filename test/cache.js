@@ -3,8 +3,7 @@
 const HTTP = require('http')
 const Lab = require('lab')
 const Path = require('path')
-const levelDown = require('leveldown')
-const Sublevel = require('level-sublevel')
+const Level = require('level')
 
 const Cache = require('../lib/cache')
 const Utils = require('../lib/utils')
@@ -39,8 +38,7 @@ function createCache(server, facilities, url, callback) {
 }
 
 function cacheLookup(levelKey, matches, callback) {
-  const mainLevelDB = Sublevel(Cache)
-  const subLevelCacheDB = mainLevelDB.sublevel(levelKey)
+  const subLevelCacheDB = Cache.sublevel(levelKey)
   subLevelCacheDB.get(matches[2], function (err, facility) {
     if (err) {
       callback(err)
@@ -63,7 +61,7 @@ lab.describe('Facility Proxy', function () {
     server.close(() => {
       Cache.close(() => {
         const path = Path.join(__dirname, '..', 'cache')
-        levelDown.destroy(path, next)
+        Level.destroy(path, next)
       })
     })
   })
