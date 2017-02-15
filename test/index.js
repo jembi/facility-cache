@@ -21,6 +21,7 @@ const server = HTTP.createServer()
 let facilityCache
 
 lab.describe('Facility Proxy', function () {
+  lab.before(Cache.open)
   lab.before(function (next) {
     server.once('request', function (req, res) {
       const facilityData = {

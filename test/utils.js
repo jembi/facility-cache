@@ -73,6 +73,7 @@ let facilityCacheServer
 const server = HTTP.createServer()
 
 lab.describe('Utils', function () {
+  lab.before(Cache.open)
   lab.beforeEach(function (next) {
     server.once('request', function (req, res) {
       const facilityData = {

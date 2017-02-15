@@ -48,6 +48,8 @@ function cacheLookup(levelKey, matches, callback) {
 }
 
 lab.describe('Facility Proxy', function () {
+  lab.before(Cache.open)
+
   let server
   lab.before(function (next) {
     server = HTTP.createServer()
