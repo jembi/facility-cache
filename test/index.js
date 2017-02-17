@@ -1,167 +1,171 @@
-'use strict';
+'use strict'
 
-var HTTP = require('http');
-var Lab = require('lab');
-var Level = require('level');
-var Needle = require('needle');
-var Path = require('path');
+const HTTP = require('http')
+const Lab = require('lab')
+const Needle = require('needle')
+const Cache = require('../lib/cache')
+const Level = require('level')
+const Path = require('path')
 
-var EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing'];
-var EXPECTED_HEADERS = [
+const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
+const EXPECTED_HEADERS = [
   {name: 'value', column: 'value', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'uid', column: 'uid', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
-];
-var URL = 'http://localhost:8001/staging/api/sqlViews/Cj0HSoDpa0P/data.json';
+]
+const URL = 'http://admin:district@localhost:8003/api/sqlViews/1/data.json'
 
-var expect = Lab.assertions;
-var lab = exports.lab = Lab.script();
+const expect = Lab.assertions
+const lab = exports.lab = Lab.script()
+const server = HTTP.createServer()
+let facilityCache
 
-lab.describe('Facility Proxy', function() {
-
-  lab.before(function(next) {
-    var path = Path.join(__dirname, '..', 'data');
-    Level.destroy(path, next);
-  });
-
-  lab.before(function(next) {
-    var server = HTTP.createServer();
-    server.once('request', function(req, res) {
-      var facilityData = {
+lab.describe('Facility Proxy', function () {
+  lab.before(Cache.open)
+  lab.before(function (next) {
+    server.once('request', function (req, res) {
+      const facilityData = {
         title: 'FacilityRegistry',
         headers: EXPECTED_HEADERS,
         rows: [
           ['', 'missing', 'za MomConnect Missing'],
           EXPECTED_FACILITY
         ]
-      };
-      res.writeHead(200, {'Content-Type': 'application/json'});
-      res.end(JSON.stringify(facilityData));
-      next();
-    });
-    server.listen(8002, function() {
+      }
+      res.writeHead(200, {'Content-Type': 'application/json'})
+      res.end(JSON.stringify(facilityData))
+      next()
+    })
+    server.listen(8002, function () {
       // Start the app
-      require('../lib');
-    });
-  });
+      facilityCache = require('../lib')
+      facilityCache.start((err) => {
+        if (err) { throw err }
+      })
+    })
+  })
 
-  lab.describe('Heartbeat', function() {
+  lab.after(function (next) {
+    server.close(() => {
+      facilityCache.stop(() => {
+        Cache.close(() => {
+          const path = Path.join(__dirname, '..', 'cache')
+          Level.destroy(path, next)
+        })
+      })
+    })
+  })
 
-    lab.it('should return the process uptime', function(next) {
-      Needle.get('http://localhost:8001/heartbeat', function(err, res) {
+  lab.describe('Heartbeat', function () {
+    lab.it('should return the process uptime', function (next) {
+      Needle.get('http://localhost:8003/heartbeat', function (err, res) {
         if (err) {
-          return next(err);
+          return next(err)
         }
-        expect(res.body.uptime).to.be.a.number();
-        next();
-      });
-    });
-  });
+        expect(res.body.uptime).to.be.a.number()
+        next()
+      })
+    })
+  })
 
-  lab.describe('API calls', function() {
-
-    lab.describe('with no criteria query parameter', function() {
-
-      lab.it('should return a 200 reponse code and no facility data', function(next) {
-        Needle.get(URL, function(err, res) {
+  lab.describe('API calls', function () {
+    lab.describe('with no criteria query parameter', function () {
+      lab.it('should return a 200 response code and no facility data', function (next) {
+        Needle.get(URL, function (err, res) {
           if (err) {
-            return next(err);
+            return next(err)
           }
-          expect(res.statusCode).to.equal(200);
-          expect(res.body.width).to.equal(0);
-          expect(res.body.headers).to.be.empty();
-          expect(res.body.height).to.equal(0);
-          expect(res.body.rows).to.be.empty();
-          next();
-        });
-      });
-    });
+          expect(res.statusCode).to.equal(200)
+          expect(res.body.width).to.equal(0)
+          expect(res.body.headers).to.be.empty()
+          expect(res.body.height).to.equal(0)
+          expect(res.body.rows).to.be.empty()
+          next()
+        })
+      })
+    })
 
-    lab.describe('with no criteria value', function() {
-
-      lab.it('should return a 200 reponse code and no facility data', function(next) {
-        Needle.get(URL + '?criteria=fail', function(err, res) {
+    lab.describe('with no criteria value', function () {
+      lab.it('should return a 200 response code and no facility data', function (next) {
+        Needle.get(URL + '?criteria=fail', function (err, res) {
           if (err) {
-            return next(err);
+            return next(err)
           }
-          expect(res.statusCode).to.equal(200);
-          expect(res.body.width).to.equal(0);
-          expect(res.body.headers).to.be.empty();
-          expect(res.body.height).to.equal(0);
-          expect(res.body.rows).to.be.empty();
-          next();
-        });
-      });
-    });
+          expect(res.statusCode).to.equal(200)
+          expect(res.body.width).to.equal(0)
+          expect(res.body.headers).to.be.empty()
+          expect(res.body.height).to.equal(0)
+          expect(res.body.rows).to.be.empty()
+          next()
+        })
+      })
+    })
 
-    lab.describe('with an invalid criteria value', function() {
-
-      lab.it('should return a 200 reponse code and no facility data', function(next) {
-        Needle.get(URL + '?criteria=value:fail', function(err, res) {
+    lab.describe('with an invalid criteria value', function () {
+      lab.it('should return a 200 response code and no facility data', function (next) {
+        Needle.get(URL + '?criteria=value:fail', function (err, res) {
           if (err) {
-            return next(err);
+            return next(err)
           }
-          expect(res.statusCode).to.equal(200);
-          expect(res.body.width).to.equal(0);
-          expect(res.body.headers).to.be.empty();
-          expect(res.body.height).to.equal(0);
-          expect(res.body.rows).to.be.empty();
-          next();
-        });
-      });
-    });
+          expect(res.statusCode).to.equal(200)
+          expect(res.body.width).to.equal(0)
+          expect(res.body.headers).to.be.empty()
+          expect(res.body.height).to.equal(0)
+          expect(res.body.rows).to.be.empty()
+          next()
+        })
+      })
+    })
 
-    lab.describe('with a non-existent facility code', function() {
-
-      lab.it('should return a 200 reponse code and no facility data', function(next) {
-        Needle.get(URL + '?criteria=value:123456', function(err, res) {
+    lab.describe('with a non-existent facility code', function () {
+      lab.it('should return a 200 response code and no facility data', function (next) {
+        Needle.get(URL + '?criteria=value:123456', function (err, res) {
           if (err) {
-            return next(err);
+            return next(err)
           }
-          expect(res.statusCode).to.equal(200);
-          expect(res.body.width).to.equal(0);
-          expect(res.body.headers).to.be.empty();
-          expect(res.body.height).to.equal(0);
-          expect(res.body.rows).to.be.empty();
-          next();
-        });
-      });
-    });
+          expect(res.statusCode).to.equal(200)
+          expect(res.body.width).to.equal(0)
+          expect(res.body.headers).to.be.empty()
+          expect(res.body.height).to.equal(0)
+          expect(res.body.rows).to.be.empty()
+          next()
+        })
+      })
+    })
 
-    lab.describe('with an existing facility code queried by value', function() {
-
-      lab.it('should return a 200 reponse code and the expected facility', function(next) {
-        Needle.get(URL + '?criteria=value:654321', function(err, res) {
+    lab.describe('with an existing facility code queried by value', function () {
+      lab.it('should return a 200 response code and the expected facility', function (next) {
+        Needle.get(URL + '?criteria=value:654321', function (err, res) {
           if (err) {
-            return next(err);
+            return next(err)
           }
-          expect(res.statusCode).to.equal(200);
-          expect(res.body.title).to.equal('FacilityRegistry');
-          expect(res.body.width).to.equal(3);
-          expect(res.body.headers).to.eql(EXPECTED_HEADERS);
-          expect(res.body.height).to.equal(1);
-          expect(res.body.rows[0]).to.eql(EXPECTED_FACILITY);
-          next();
-        });
-      });
-    });
 
-    lab.describe('with an existing facility code queried by code', function() {
+          expect(res.statusCode).to.equal(200)
+          expect(res.body.title).to.equal('FacilityRegistry')
+          expect(res.body.width).to.equal(3)
+          expect(res.body.headers).to.eql(EXPECTED_HEADERS)
+          expect(res.body.height).to.equal(1)
+          expect(res.body.rows[0]).to.eql(EXPECTED_FACILITY)
+          next()
+        })
+      })
+    })
 
-      lab.it('should return a 200 reponse code and the expected facility', function(next) {
-        Needle.get(URL + '?criteria=code:654321', function(err, res) {
+    lab.describe('with an existing facility code queried by code', function () {
+      lab.it('should return a 200 response code and the expected facility', function (next) {
+        Needle.get(URL + '?criteria=code:654321', function (err, res) {
           if (err) {
-            return next(err);
+            return next(err)
           }
-          expect(res.statusCode).to.equal(200);
-          expect(res.body.title).to.equal('FacilityRegistry');
-          expect(res.body.width).to.equal(3);
-          expect(res.body.headers).to.eql(EXPECTED_HEADERS);
-          expect(res.body.height).to.equal(1);
-          expect(res.body.rows[0]).to.eql(EXPECTED_FACILITY);
-          next();
-        });
-      });
-    });
-  });
-});
+          expect(res.statusCode).to.equal(200)
+          expect(res.body.title).to.equal('FacilityRegistry')
+          expect(res.body.width).to.equal(3)
+          expect(res.body.headers).to.eql(EXPECTED_HEADERS)
+          expect(res.body.height).to.equal(1)
+          expect(res.body.rows[0]).to.eql(EXPECTED_FACILITY)
+          next()
+        })
+      })
+    })
+  })
+})
