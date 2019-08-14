@@ -1,0 +1,5 @@
+coverage/
+.travis.yml
+Dockerfile
+test/
+.git/
