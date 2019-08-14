@@ -12,6 +12,8 @@ Persistent cache for facility lookups.
 1. Make sure that your `NODE_ENV` environment variable is set correctly e.g. `export NODE_ENV=production`.
 1. Run `npm start`.
 
-### Launch Docker container
+### Docker
 
-    `docker run -d -p 8001:8001 [--network host] [--name facility] jembi/facility-cache`
+Use this command to launch the Docker container: 
+
+`docker run -d -p 8001:8001 [--network host] [--name facility] jembi/facility-cache`
