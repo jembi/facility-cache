@@ -3,10 +3,11 @@ FROM node:carbon
 WORKDIR /opt/facility-cache
 
 # Copy source
-COPY . ./
+COPY . .
 
 # Install dependencies
-COPY package.json ./
+COPY package.json npm-shrinkwrap.json ./
+
 RUN npm i
 
 # Run server
