@@ -14,6 +14,10 @@ Persistent cache for facility lookups.
 
 ### Docker
 
+Use this command to build the Docker image: 
+
+`docker build -t jembi/facility-cache .`
+
 Use this command to launch the Docker container: 
 
 `docker run -d -p 8001:8001 [--network host] [--name facility] jembi/facility-cache`

@@ -3,3 +3,6 @@ coverage/
 Dockerfile
 test/
 .git/
+coverage.html
+.jshintrc
+.gitignore
