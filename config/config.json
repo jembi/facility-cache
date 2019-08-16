@@ -16,7 +16,7 @@
   "openhim": {
     "api" : {
       "username": "root@openhim.org",
-      "password": "password",
+      "password": "openhim-password",
       "apiURL": "https://localhost:8080",
       "trustSelfSigned": true
     },

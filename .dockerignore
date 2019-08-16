@@ -1,0 +1,10 @@
+coverage/
+.travis.yml
+Dockerfile
+test/
+.git/
+coverage.html
+.jshintrc
+.gitignore
+node_modules/
+config/test.json
