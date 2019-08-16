@@ -7,3 +7,4 @@ coverage.html
 .jshintrc
 .gitignore
 node_modules/
+config/test.json
