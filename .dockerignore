@@ -6,3 +6,4 @@ test/
 coverage.html
 .jshintrc
 .gitignore
+node_modules/
