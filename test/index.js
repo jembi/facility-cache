@@ -7,23 +7,25 @@ const Cache = require('../lib/cache')
 const Level = require('level')
 const Path = require('path')
 
+const facilityCache = require('../lib')
+const testConfig = require('../config/test')
+
 const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
 const EXPECTED_HEADERS = [
   {name: 'value', column: 'value', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'uid', column: 'uid', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
 ]
-const URL = 'http://admin:district@localhost:8003/api/sqlViews/1/data.json'
+const URL = 'http://admin:district@localhost:8001/api/sqlViews/1/data.json'
 
 const expect = Lab.assertions
 const lab = exports.lab = Lab.script()
 const server = HTTP.createServer()
-let facilityCache
 
 lab.describe('Facility Proxy', function () {
   lab.before(Cache.open)
   lab.before(function (next) {
-    server.once('request', function (req, res) {
+    server.on('request', function (req, res) {
       const facilityData = {
         title: 'FacilityRegistry',
         headers: EXPECTED_HEADERS,
@@ -38,8 +40,7 @@ lab.describe('Facility Proxy', function () {
     })
     server.listen(8002, function () {
       // Start the app
-      facilityCache = require('../lib')
-      facilityCache.start((err) => {
+      facilityCache.start(testConfig.configure(), (err) => {
         if (err) { throw err }
       })
     })
@@ -58,7 +59,7 @@ lab.describe('Facility Proxy', function () {
 
   lab.describe('Heartbeat', function () {
     lab.it('should return the process uptime', function (next) {
-      Needle.get('http://localhost:8003/heartbeat', function (err, res) {
+      Needle.get('http://localhost:8001/heartbeat', function (err, res) {
         if (err) {
           return next(err)
         }
