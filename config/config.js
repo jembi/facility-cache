@@ -8,7 +8,7 @@ function configure () {
     }),
 
     "logger": Object.freeze({
-      "level": "info"
+      "level": process.env.LOGGING_LEVEL || "info"
     }),
 
     "statsd": Object.freeze({
