@@ -8,6 +8,7 @@ const HTTP = require('http')
 const Level = require('level')
 const Path = require('path')
 const facilityCache = require('../lib')
+const testConfig = require('../config/test')
 
 const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
 const EXPECTED_HEADERS = [
@@ -69,7 +70,8 @@ function findRoute(app, path) {
 }
 
 let app
-let facilityCacheServer
+let medConf
+let fc
 const server = HTTP.createServer()
 
 lab.describe('Utils', function () {
@@ -88,20 +90,15 @@ lab.describe('Utils', function () {
       res.end(JSON.stringify(facilityData))
       next()
     })
-    server.listen(8002, function () {
-      facilityCache.setupConfig((err, appConfig) => {
-        if (err) {
-          throw err
-        }
-        app = facilityCache.setupApp(mediatorConfig.config, appConfig)
-        facilityCacheServer = app.listen(8003)
-      })
+    fc = server.listen(8002, function () {
+      medConf = mediatorConfig.configure()
+      app = facilityCache.setupApp(medConf.config, testConfig.configure())
     })
   })
 
   lab.afterEach(function (next) {
-    server.close(() => {
-      facilityCacheServer.close(() => {
+    fc.close(() => {
+      fc.close(() => {
         Cache.close(() => {
           Utils.resetCronJobs()
           const path = Path.join(__dirname, '..', 'cache')
@@ -113,7 +110,7 @@ lab.describe('Utils', function () {
 
   lab.describe('Update Config', function () {
     lab.it('should update the cron and routes with the new config', function (next) {
-      Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
+      Utils.updateConfig(app, medConf.config.routes, config1.routes)
       expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/1']).to.exist()
       expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2']).to.exist()
       expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'].cronTime.source).to.equal('* * * * *')
@@ -126,7 +123,7 @@ lab.describe('Utils', function () {
     })
 
     lab.it('should update the cron and routes with the new config', function (next) {
-      Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
+      Utils.updateConfig(app, medConf.config.routes, config1.routes)
       Utils.updateConfig(app, config1.routes, config2.routes)
       expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2']).to.exist()
       expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/3']).to.exist()
@@ -140,7 +137,7 @@ lab.describe('Utils', function () {
     })
 
     lab.it('should update the cron and routes with the new config', function (next) {
-      Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
+      Utils.updateConfig(app, medConf.config.routes, config1.routes)
       Utils.updateConfig(app, config1.routes, config2.routes)
       Utils.updateConfig(app, config2.routes, config3.routes)
       expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/3']).to.exist()
