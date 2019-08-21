@@ -23,7 +23,7 @@ function configure () {
         "apiURL": process.env.OPENHIM_URL || "https://localhost:8080",
         "trustSelfSigned": process.env.TRUSTED_SELF_SIGNED || true
       },
-      "register": true,
+      "register": process.env.REGISTER_MEDIATOR || true,
       "heartbeat": true
     })
   })
