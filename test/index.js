@@ -8,7 +8,7 @@ const Level = require('level')
 const Path = require('path')
 
 const facilityCache = require('../lib')
-const testConfig = require('../config/test')
+const testConfig = require('../config/config')
 
 const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
 const EXPECTED_HEADERS = [
