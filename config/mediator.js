@@ -1,7 +1,7 @@
 'use strict'
 
 function configure () {
-  return Object.freeze({
+  return {
     "urn": "urn:mediator:facility-cache",
     "version": "1.0.0",
     "name": "OpenHIM Facility Cache Mediator",
@@ -14,14 +14,14 @@ function configure () {
         "type": "http"
       }
     ],
-    "configDefs": Object.freeze([
+    "configDefs": [
       {
         "param": "routes",
         "displayName": "Routes",
         "description": "Locations of facilities to cache",
         "type": "struct",
         "array": true,
-        "template": Object.freeze([
+        "template": [
           {
             "param": "dhisUrl",
             "displayName": "DHIS Url",
@@ -43,20 +43,20 @@ function configure () {
             "description": "Timezone of the cron",
             "type": "string"
           }
-        ])
+        ]
       }
-    ]),
-    "config": Object.freeze({
-      "routes": Object.freeze([
+    ],
+    "config": {
+      "routes": [
         {
           "dhisUrl": "http://admin:district@localhost:8002",
           "dhisPath": "/api/sqlViews/1/data.json",
           "cronPattern": "00 00 12 * * *",
           "cronTimezone": "Africa/Johannesburg"
         }
-      ])
-    })
-  })
+      ]
+    }
+  }
 }
 
 exports.configure = configure
