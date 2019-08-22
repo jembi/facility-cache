@@ -16,7 +16,7 @@ function configure () {
       "port": process.env.STATSD_PORT || 8125
     }),
 
-    "openhim": Object.freeze({
+    "openhim": {
       "api" : {
         "username": process.env.OPENHIM_USERNAME || "root@openhim.org",
         "password": process.env.OPENHIM_PASSWORD || "openhim-password",
@@ -25,7 +25,7 @@ function configure () {
       },
       "register": process.env.REGISTER_MEDIATOR || true,
       "heartbeat": true
-    })
+    }
   })
 }
 
