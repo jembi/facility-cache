@@ -2591,11 +2591,6 @@
         }
       }
     },
-    "node-statsd": {
-      "version": "0.1.1",
-      "resolved": "https://registry.npmjs.org/node-statsd/-/node-statsd-0.1.1.tgz",
-      "integrity": "sha1-J6WTSHY9CvegN6wqAx/vPwUQE9M="
-    },
     "noop-logger": {
       "version": "0.1.1",
       "resolved": "https://registry.npmjs.org/noop-logger/-/noop-logger-0.1.1.tgz",
