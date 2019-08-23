@@ -70,7 +70,7 @@ function findRoute(app, path) {
 }
 
 let app
-let fc
+let mockServer
 const server = HTTP.createServer()
 
 lab.describe('Utils', function () {
@@ -89,19 +89,17 @@ lab.describe('Utils', function () {
       res.end(JSON.stringify(facilityData))
       next()
     })
-    fc = server.listen(8002, function () {
+    mockServer = server.listen(8002, function () {
       app = facilityCache.setupApp(mediatorConfig.config, testConfig.configure())
     })
   })
 
   lab.afterEach(function (next) {
-    fc.close(() => {
-      fc.close(() => {
-        Cache.close(() => {
-          Utils.resetCronJobs()
-          const path = Path.join(__dirname, '..', 'cache')
-          Level.destroy(path, next)
-        })
+    mockServer.close(() => {
+      Cache.close(() => {
+        Utils.resetCronJobs()
+        const path = Path.join(__dirname, '..', 'cache')
+        Level.destroy(path, next)
       })
     })
   })
