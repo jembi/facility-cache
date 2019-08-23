@@ -41,9 +41,6 @@ lab.describe('Facility Proxy', function () {
     server.listen(8002, function () {
       // Start the app
       let conf = testConfig.configure()
-      if (conf && conf.openhim && conf.openhim.register === 'false') {
-        conf.openhim.register = false
-      }
       facilityCache.start(conf, (err) => {
         if (err) { throw err }
       })
