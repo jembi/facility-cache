@@ -8,6 +8,7 @@ const HTTP = require('http')
 const Level = require('level')
 const Path = require('path')
 const facilityCache = require('../lib')
+const testConfig = require('../lib/config')
 
 const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
 const EXPECTED_HEADERS = [
@@ -69,7 +70,7 @@ function findRoute(app, path) {
 }
 
 let app
-let facilityCacheServer
+let mockServer
 const server = HTTP.createServer()
 
 lab.describe('Utils', function () {
@@ -88,25 +89,17 @@ lab.describe('Utils', function () {
       res.end(JSON.stringify(facilityData))
       next()
     })
-    server.listen(8002, function () {
-      facilityCache.setupConfig((err, appConfig) => {
-        if (err) {
-          throw err
-        }
-        app = facilityCache.setupApp(mediatorConfig.config, appConfig)
-        facilityCacheServer = app.listen(8003)
-      })
+    mockServer = server.listen(8002, function () {
+      app = facilityCache.setupApp(mediatorConfig.config, testConfig.getApiConfig())
     })
   })
 
   lab.afterEach(function (next) {
-    server.close(() => {
-      facilityCacheServer.close(() => {
-        Cache.close(() => {
-          Utils.resetCronJobs()
-          const path = Path.join(__dirname, '..', 'cache')
-          Level.destroy(path, next)
-        })
+    mockServer.close(() => {
+      Cache.close(() => {
+        Utils.resetCronJobs()
+        const path = Path.join(__dirname, '..', 'cache')
+        Level.destroy(path, next)
       })
     })
   })
