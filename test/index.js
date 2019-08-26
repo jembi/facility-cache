@@ -22,9 +22,6 @@ const expect = Lab.assertions
 const lab = exports.lab = Lab.script()
 const server = HTTP.createServer()
 
-console.log('process.env.TRUSTED_SELF_SIGNED='+process.env.TRUSTED_SELF_SIGNED)
-console.log('process.env.REGISTER_MEDIATOR='+process.env.REGISTER_MEDIATOR)
-
 lab.describe('Facility Proxy', function () {
   lab.before(Cache.open)
   lab.before(function (next) {
