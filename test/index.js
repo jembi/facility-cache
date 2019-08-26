@@ -43,7 +43,7 @@ lab.describe('Facility Proxy', function () {
     })
     server.listen(8002, function () {
       // Start the app
-      let conf = testConfig.configure()
+      let conf = testConfig.getApiConfig()
       facilityCache.start(conf, (err) => {
         if (err) { throw err }
       })

@@ -90,7 +90,7 @@ lab.describe('Utils', function () {
       next()
     })
     mockServer = server.listen(8002, function () {
-      app = facilityCache.setupApp(mediatorConfig.config, testConfig.configure())
+      app = facilityCache.setupApp(mediatorConfig.config, testConfig.getApiConfig())
     })
   })
 
