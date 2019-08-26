@@ -18,6 +18,9 @@ const EXPECTED_HEADERS = [
 ]
 const URL = 'http://admin:district@localhost:8001/api/sqlViews/1/data.json'
 
+// Set the config options for running the tests
+process.env.REGISTER_MEDIATOR = 'false'
+
 const expect = Lab.assertions
 const lab = exports.lab = Lab.script()
 const server = HTTP.createServer()

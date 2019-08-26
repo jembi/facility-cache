@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "node lib/index",
-    "test": "TRUSTED_SELF_SIGNED=true REGISTER_MEDIATOR=false lab -va must",
+    "test": "lab -va must",
     "cover": "lab -a must -r html -o coverage.html"
   }
 }
