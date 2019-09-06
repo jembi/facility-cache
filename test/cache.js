@@ -26,9 +26,11 @@ const lab = exports.lab = Lab.script()
 function createCache(server, facilities, url, callback) {
   server.once('request', function (req, res) {
     const facilityData = {
-      title: 'FacilityRegistry',
-      headers: EXPECTED_HEADERS,
-      rows: facilities
+      listGrid: {
+        title: 'FacilityRegistry',
+        headers: EXPECTED_HEADERS,
+        rows: facilities
+      }
     }
     res.writeHead(200, {'Content-Type': 'application/json'})
     res.end(JSON.stringify(facilityData))
