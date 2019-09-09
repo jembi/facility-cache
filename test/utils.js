@@ -78,12 +78,14 @@ lab.describe('Utils', function () {
   lab.beforeEach(function (next) {
     server.once('request', function (req, res) {
       const facilityData = {
-        title: 'FacilityRegistry',
-        headers: EXPECTED_HEADERS,
-        rows: [
-          ['', 'missing', 'za MomConnect Missing'],
-          EXPECTED_FACILITY
-        ]
+        listGrid: {
+          title: 'FacilityRegistry',
+          headers: EXPECTED_HEADERS,
+          rows: [
+            ['', 'missing', 'za MomConnect Missing'],
+            EXPECTED_FACILITY
+          ]
+        }
       }
       res.writeHead(200, {'Content-Type': 'application/json'})
       res.end(JSON.stringify(facilityData))
