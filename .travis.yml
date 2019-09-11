@@ -1,8 +1,8 @@
 language: node_js
 node_js:
-  - "lts/carbon"
-  - "lts/dubnium"
-  - "node"
+  - 'lts/carbon'
+  - 'lts/dubnium'
+  - 'node'
 matrix:
   fast_finish: true
   allow_failures:
