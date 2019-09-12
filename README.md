@@ -1,4 +1,10 @@
-# facility-cache [![Build Status](https://travis-ci.org/jembi/facility-cache.svg)](https://travis-ci.org/jembi/facility-cache)
+# facility-cache
+
+[![Build Status](https://travis-ci.org/jembi/facility-cache.svg)](https://travis-ci.org/jembi/facility-cache)
+
+Compatible DHIS versions:
+
+* [![DHIS2.30 Build](https://img.shields.io/badge/DHIS-2.30-brightgreen.svg)](https://launchpad.net/dhis2/+milestone/2.30)
 
 Persistent cache for facility lookups.
 
@@ -8,16 +14,41 @@ Persistent cache for facility lookups.
 
 1. Clone this repository.
 1. Run `npm install`.
-1. Create a config file e.g. `production.json` in the `config` directory. See the [default config](https://github.com/jembi/facility-cache/blob/master/config/config.json) for the available options.
+1. Set environment variables.
 1. Make sure that your `NODE_ENV` environment variable is set correctly e.g. `export NODE_ENV=production`.
 1. Run `npm start`.
 
 ### Docker
 
-Use this command to build the Docker image: 
+Use this command to build the Docker image:
 
-`docker build -t facility-cache .`
+```sh
+docker build -t facility-cache .
+```
 
-Use this command to launch the Docker container: 
+Use this command to launch the Docker container:
 
-`docker run -d -p 8001:8001 [--network host] [--name facility-cache] facility-cache`
+```sh
+docker run -d -p 8001:8001 [--name facility-cache] facility-cache
+```
+
+Useful Flags:
+
+* `--network {openhim-network-name}` connect to a docker bridge network to allow communicating with dockerised OpenHIM
+* `--rm` to remove the container when stopped (Useful during development)
+
+## Environment variables
+
+| Key | Default value | Description |
+| --- | --- | --- |
+| **Server** | | |
+| SERVER_HOSTNAME | `localhost` | Mediator host address |
+| SERVER_PORT | `3500` | Mediator port number |
+| **OpenHIM** | | |
+| OPENHIM_USERNAME | `root@openhim.org` | OpenHIM API username |
+| OPENHIM_PASSWORD | `openhim-password` | OpenHIM API password |
+| OPENHIM_URL | `https://localhost:8080` | OpenHIM API address |
+| TRUSTED_SELF_SIGNED | `false` | Trust the OpenHIM's Self-signed certificate |
+| **Cache** | | |
+| LOGGING_LEVEL | `info` | |
+| REGISTER_MEDIATOR | `true` | Register the mediator with the OpenHIM |
