@@ -15,7 +15,7 @@ const EXPECTED_FACILITIES_1 = [{code: '111111', displayName: 'Test Facility 1', 
 const EXPECTED_FACILITIES_2 = [{code: '222222', displayName: 'Test Facility 2', id: 'facility2'}]
 
 function createCache(server, facilities, url, callback) {
-  server.once('request', function (req, res) {
+  server.once('request', function (_req, res) {
     const facilityData = {
       organisationUnits: facilities
     }
