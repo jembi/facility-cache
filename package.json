@@ -5,7 +5,6 @@
     "express": "^4.17.1",
     "level": "^5.0.1",
     "level-sublevel": "^6.6.5",
-    "mocha": "^8.0.1",
     "mustache": "^3.0.3",
     "needle": "^2.5.0",
     "openhim-mediator-utils": "^0.2.3",
@@ -13,6 +12,7 @@
   },
   "devDependencies": {
     "codecov": "^3.7.0",
+    "mocha": "^8.0.1",
     "nyc": "^15.1.0",
     "standard": "^14.3.4"
   },
