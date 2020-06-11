@@ -11,23 +11,13 @@ const Utils = require('../lib/utils')
 const URL1 = 'http://localhost:8002/api/test/1'
 const URL2 = 'http://localhost:8002/api/test/2'
 
-const EXPECTED_FACILITYS1 = [['111111', 'existing', 'Test Facility 1']]
-const EXPECTED_FACILITYS2 = [['222222', 'existing', 'Test Facility 2']]
-
-const EXPECTED_HEADERS = [
-  {name: 'value', column: 'value', type: 'java.lang.String', hidden: false, meta: false},
-  {name: 'uid', column: 'uid', type: 'java.lang.String', hidden: false, meta: false},
-  {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
-]
+const EXPECTED_FACILITIES_1 = [{code: '111111', displayName: 'Test Facility 1', id: 'facility1'}]
+const EXPECTED_FACILITIES_2 = [{code: '222222', displayName: 'Test Facility 2', id: 'facility2'}]
 
 function createCache(server, facilities, url, callback) {
   server.once('request', function (req, res) {
     const facilityData = {
-      listGrid: {
-        title: 'FacilityRegistry',
-        headers: EXPECTED_HEADERS,
-        rows: facilities
-      }
+      organisationUnits: facilities
     }
     res.writeHead(200, {'Content-Type': 'application/json'})
     res.end(JSON.stringify(facilityData))
@@ -52,8 +42,8 @@ describe('Facility Proxy', function () {
   let server
   before(function (next) {
     server = HTTP.createServer()
-    createCache(server, EXPECTED_FACILITYS1, URL1, () => {
-      createCache(server, EXPECTED_FACILITYS2, URL2, next)
+    createCache(server, EXPECTED_FACILITIES_1, URL1, () => {
+      createCache(server, EXPECTED_FACILITIES_2, URL2, next)
     })
     server.listen(8002)
   })
@@ -80,14 +70,16 @@ describe('Facility Proxy', function () {
           throw err
         }
         result = JSON.parse(result)
-        assert.equal(result.rows[0][0], '111111')
+        assert.equal(result.id, 'facility1')
+        assert.equal(result.displayName, 'Test Facility 1')
 
         cacheLookup(levelKey2, matches2, (err, result) => {
           if(err) {
             throw err
           }
           result = JSON.parse(result)
-          assert.equal(result.rows[0][0], '222222')
+          assert.equal(result.id, 'facility2')
+          assert.equal(result.displayName, 'Test Facility 2')
           next()
         })
       })

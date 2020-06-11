@@ -10,12 +10,11 @@ const facilityCache = require('../lib')
 const testConfig = require('../lib/config')
 const assert = require('assert')
 
-const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
-const EXPECTED_HEADERS = [
-  {name: 'value', column: 'value', type: 'java.lang.String', hidden: false, meta: false},
-  {name: 'uid', column: 'uid', type: 'java.lang.String', hidden: false, meta: false},
-  {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
-]
+const EXPECTED_FACILITY = {
+  code: '654321',
+  displayName: 'za MomConnect Existing',
+  id: 'facility1'
+}
 
 const config1 = {
   routes: [{
@@ -73,16 +72,9 @@ const server = HTTP.createServer()
 describe('Utils', function () {
   before(Cache.open)
   beforeEach(function (next) {
-    server.once('request', function (req, res) {
+    server.once('request', function (_req, res) {
       const facilityData = {
-        listGrid: {
-          title: 'FacilityRegistry',
-          headers: EXPECTED_HEADERS,
-          rows: [
-            ['', 'missing', 'za MomConnect Missing'],
-            EXPECTED_FACILITY
-          ]
-        }
+        organisationUnits: [EXPECTED_FACILITY]
       }
       res.writeHead(200, {'Content-Type': 'application/json'})
       res.end(JSON.stringify(facilityData))
@@ -104,7 +96,7 @@ describe('Utils', function () {
   })
 
   describe('Update Config', function () {
-    it('should update the cron and routes with the new config', function (next) {
+    it('should update the cron and routes with the new config once', function (next) {
       Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
       assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'].cronTime.source, '* * * * *')
       assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/1'].cronTime.source, '* * * * *')
@@ -115,7 +107,7 @@ describe('Utils', function () {
       next()
     })
 
-    it('should update the cron and routes with the new config', function (next) {
+    it('should update the cron and routes with the new config twice', function (next) {
       Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
       Utils.updateConfig(app, config1.routes, config2.routes)
       assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'].cronTime.source, '* * * * *')
@@ -127,7 +119,7 @@ describe('Utils', function () {
       next()
     })
 
-    it('should update the cron and routes with the new config', function (next) {
+    it('should update the cron and routes with the new config thrice', function (next) {
       Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
       Utils.updateConfig(app, config1.routes, config2.routes)
       Utils.updateConfig(app, config2.routes, config3.routes)
