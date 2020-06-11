@@ -1,9 +1,9 @@
 'use strict'
 
 const HTTP = require('http')
-const Lab = require('lab')
 const Path = require('path')
 const Level = require('level')
+const assert = require('assert')
 
 const Cache = require('../lib/cache')
 const Utils = require('../lib/utils')
@@ -19,9 +19,6 @@ const EXPECTED_HEADERS = [
   {name: 'uid', column: 'uid', type: 'java.lang.String', hidden: false, meta: false},
   {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
 ]
-
-const expect = Lab.assertions
-const lab = exports.lab = Lab.script()
 
 function createCache(server, facilities, url, callback) {
   server.once('request', function (req, res) {
@@ -49,11 +46,11 @@ function cacheLookup(levelKey, matches, callback) {
   })
 }
 
-lab.describe('Facility Proxy', function () {
-  lab.before(Cache.open)
+describe('Facility Proxy', function () {
+  before(Cache.open)
 
   let server
-  lab.before(function (next) {
+  before(function (next) {
     server = HTTP.createServer()
     createCache(server, EXPECTED_FACILITYS1, URL1, () => {
       createCache(server, EXPECTED_FACILITYS2, URL2, next)
@@ -61,7 +58,7 @@ lab.describe('Facility Proxy', function () {
     server.listen(8002)
   })
 
-  lab.after(function (next) {
+  after(function (next) {
     server.close(() => {
       Cache.close(() => {
         const path = Path.join(__dirname, '..', 'cache')
@@ -69,28 +66,28 @@ lab.describe('Facility Proxy', function () {
       })
     })
   })
-  
-  lab.describe('Cache', function () {
-    lab.it('should correctly populate cache with two lists of facilities', function (next) {
+
+  describe('Cache', function () {
+    it('should correctly populate cache with two lists of facilities', function (next) {
       const levelKey1 = '/api/test/1'
       const levelKey2 = '/api/test/2'
-      
+
       const matches1 = [0, 0, '111111']
       const matches2 = [0, 0, '222222']
-      
+
       cacheLookup(levelKey1, matches1, (err, result) => {
         if(err) {
           throw err
         }
         result = JSON.parse(result)
-        expect(result.rows[0][0]).to.equal('111111')
-        
+        assert.equal(result.rows[0][0], '111111')
+
         cacheLookup(levelKey2, matches2, (err, result) => {
           if(err) {
             throw err
           }
           result = JSON.parse(result)
-          expect(result.rows[0][0]).to.equal('222222')
+          assert.equal(result.rows[0][0], '222222')
           next()
         })
       })

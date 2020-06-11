@@ -1,23 +1,24 @@
 {
   "version": "4.0.0",
   "dependencies": {
-    "cron": "^1.7.1",
+    "cron": "^1.8.2",
     "express": "^4.17.1",
     "level": "^5.0.1",
     "level-sublevel": "^6.6.5",
+    "mocha": "^8.0.1",
     "mustache": "^3.0.3",
-    "needle": "^2.4.0",
+    "needle": "^2.5.0",
     "openhim-mediator-utils": "^0.2.3",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "lab": "^14.1.0",
-    "must": "^0.13.4",
-    "standard": "^14.0.2"
+    "codecov": "^3.7.0",
+    "nyc": "^15.1.0",
+    "standard": "^14.3.4"
   },
   "scripts": {
     "start": "node lib/index",
-    "test": "lab -va must",
-    "cover": "lab -a must -r html -o coverage.html"
+    "test": "NODE_ENV=test nyc mocha --exit",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   }
 }

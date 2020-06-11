@@ -1,6 +1,5 @@
 'use strict'
 
-const Lab = require('lab')
 const Utils = require('../lib/utils')
 const mediatorConfig = require('../config/mediator')
 const Cache = require('../lib/cache')
@@ -9,6 +8,7 @@ const Level = require('level')
 const Path = require('path')
 const facilityCache = require('../lib')
 const testConfig = require('../lib/config')
+const assert = require('assert')
 
 const EXPECTED_FACILITY = ['654321', 'existing', 'za MomConnect Existing']
 const EXPECTED_HEADERS = [
@@ -17,14 +17,11 @@ const EXPECTED_HEADERS = [
   {name: 'name', column: 'name', type: 'java.lang.String', hidden: false, meta: false}
 ]
 
-const expect = Lab.assertions
-const lab = exports.lab = Lab.script()
-
 const config1 = {
   routes: [{
     'dhisUrl': 'http://localhost:8000',
     'dhisPath': '/api/sqlViews/1',
-    'cronPattern': '* * * *',
+    'cronPattern': '* * * * *',
     'cronTimezone': 'Africa/Johannesburg'
   }, {
     'dhisUrl': 'http://localhost:8000',
@@ -38,7 +35,7 @@ const config2 = {
   routes: [{
     'dhisUrl': 'http://localhost:8000',
     'dhisPath': '/api/sqlViews/3',
-    'cronPattern': '* * * *',
+    'cronPattern': '* * * * *',
     'cronTimezone': 'Africa/Johannesburg'
   }, {
     'dhisUrl': 'http://localhost:8000',
@@ -52,7 +49,7 @@ const config3 = {
   routes: [{
     'dhisUrl': 'http://localhost:8000',
     'dhisPath': '/api/sqlViews/3',
-    'cronPattern': '0 0 0 0 0',
+    'cronPattern': '2 0 * * *',
     'cronTimezone': 'Africa/Johannesburg'
   }]
 }
@@ -73,9 +70,9 @@ let app
 let mockServer
 const server = HTTP.createServer()
 
-lab.describe('Utils', function () {
-  lab.before(Cache.open)
-  lab.beforeEach(function (next) {
+describe('Utils', function () {
+  before(Cache.open)
+  beforeEach(function (next) {
     server.once('request', function (req, res) {
       const facilityData = {
         listGrid: {
@@ -96,7 +93,7 @@ lab.describe('Utils', function () {
     })
   })
 
-  lab.afterEach(function (next) {
+  afterEach(function (next) {
     mockServer.close(() => {
       Cache.close(() => {
         Utils.resetCronJobs()
@@ -106,43 +103,38 @@ lab.describe('Utils', function () {
     })
   })
 
-  lab.describe('Update Config', function () {
-    lab.it('should update the cron and routes with the new config', function (next) {
+  describe('Update Config', function () {
+    it('should update the cron and routes with the new config', function (next) {
       Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/1']).to.exist()
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2']).to.exist()
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'].cronTime.source).to.equal('* * * * *')
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/1'].cronTime.source).to.equal('* * * *')
-      expect(Utils.cronJobs['http://admin:district@localhost:8002/staging/api/sqlViews/Cj0HSoDpa0P/data.json']).to.not.exist()
-      expect(findRoute(app, '/api/sqlViews/1')).to.be.true()
-      expect(findRoute(app, '/api/sqlViews/2')).to.be.true()
-      expect(findRoute(app, '/staging/api/sqlViews/Cj0HSoDpa0P/data.json')).to.be.false()
+      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'].cronTime.source, '* * * * *')
+      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/1'].cronTime.source, '* * * * *')
+      assert.equal(Utils.cronJobs['http://admin:district@localhost:8002/staging/api/sqlViews/Cj0HSoDpa0P/data.json'], null)
+      assert.equal(findRoute(app, '/api/sqlViews/1'), true)
+      assert.equal(findRoute(app, '/api/sqlViews/2'), true)
+      assert.equal(findRoute(app, '/staging/api/sqlViews/Cj0HSoDpa0P/data.json'), false)
       next()
     })
 
-    lab.it('should update the cron and routes with the new config', function (next) {
+    it('should update the cron and routes with the new config', function (next) {
       Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
       Utils.updateConfig(app, config1.routes, config2.routes)
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2']).to.exist()
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/3']).to.exist()
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'].cronTime.source).to.equal('* * * * *')
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/3'].cronTime.source).to.equal('* * * *')
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/1']).to.not.exist()
-      expect(findRoute(app, '/api/sqlViews/3')).to.be.true()
-      expect(findRoute(app, '/api/sqlViews/2')).to.be.true()
-      expect(findRoute(app, '/api/sqlViews/1')).to.be.false()
+      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'].cronTime.source, '* * * * *')
+      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/3'].cronTime.source, '* * * * *')
+      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/1'], null)
+      assert.equal(findRoute(app, '/api/sqlViews/3'), true)
+      assert.equal(findRoute(app, '/api/sqlViews/2'), true)
+      assert.equal(findRoute(app, '/api/sqlViews/1'), false)
       next()
     })
 
-    lab.it('should update the cron and routes with the new config', function (next) {
+    it('should update the cron and routes with the new config', function (next) {
       Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
       Utils.updateConfig(app, config1.routes, config2.routes)
       Utils.updateConfig(app, config2.routes, config3.routes)
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/3']).to.exist()
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/2']).to.not.exist()
-      expect(Utils.cronJobs['http://localhost:8000/api/sqlViews/3'].cronTime.source).to.equal('0 0 0 0 0')
-      expect(findRoute(app, '/api/sqlViews/3')).to.be.true()
-      expect(findRoute(app, '/api/sqlViews/2')).to.be.false()
+      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'], null)
+      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/3'].cronTime.source, '2 0 * * *')
+      assert.equal(findRoute(app, '/api/sqlViews/3'), true)
+      assert.equal(findRoute(app, '/api/sqlViews/2'), false)
       next()
     })
   })
