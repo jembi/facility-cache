@@ -19,12 +19,12 @@ const EXPECTED_FACILITY = {
 const config1 = {
   routes: [{
     'dhisUrl': 'http://localhost:8000',
-    'dhisPath': '/api/sqlViews/1',
+    'dhisPath': '/2.31/api/organisationUnits',
     'cronPattern': '* * * * *',
     'cronTimezone': 'Africa/Johannesburg'
   }, {
     'dhisUrl': 'http://localhost:8000',
-    'dhisPath': '/api/sqlViews/2',
+    'dhisPath': '/2.32/api/organisationUnits',
     'cronPattern': '* * * * *',
     'cronTimezone': 'Africa/Johannesburg'
   }]
@@ -33,12 +33,12 @@ const config1 = {
 const config2 = {
   routes: [{
     'dhisUrl': 'http://localhost:8000',
-    'dhisPath': '/api/sqlViews/3',
+    'dhisPath': '/2.33/api/organisationUnits',
     'cronPattern': '* * * * *',
     'cronTimezone': 'Africa/Johannesburg'
   }, {
     'dhisUrl': 'http://localhost:8000',
-    'dhisPath': '/api/sqlViews/2',
+    'dhisPath': '/2.32/api/organisationUnits',
     'cronPattern': '* * * * *',
     'cronTimezone': 'Africa/Johannesburg'
   }]
@@ -47,7 +47,7 @@ const config2 = {
 const config3 = {
   routes: [{
     'dhisUrl': 'http://localhost:8000',
-    'dhisPath': '/api/sqlViews/3',
+    'dhisPath': '/2.33/api/organisationUnits',
     'cronPattern': '2 0 * * *',
     'cronTimezone': 'Africa/Johannesburg'
   }]
@@ -98,24 +98,26 @@ describe('Utils', function () {
   describe('Update Config', function () {
     it('should update the cron and routes with the new config once', function (next) {
       Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
-      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'].cronTime.source, '* * * * *')
-      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/1'].cronTime.source, '* * * * *')
-      assert.equal(Utils.cronJobs['http://admin:district@localhost:8002/staging/api/sqlViews/Cj0HSoDpa0P/data.json'], null)
-      assert.equal(findRoute(app, '/api/sqlViews/1'), true)
-      assert.equal(findRoute(app, '/api/sqlViews/2'), true)
-      assert.equal(findRoute(app, '/staging/api/sqlViews/Cj0HSoDpa0P/data.json'), false)
+      assert.equal(Utils.cronJobs['http://localhost:8000/2.32/api/organisationUnits'].cronTime.source, '* * * * *')
+      assert.equal(Utils.cronJobs['http://localhost:8000/2.31/api/organisationUnits'].cronTime.source, '* * * * *')
+      // Default url cronjob should be removed
+      assert.equal(Utils.cronJobs['http://admin:district@localhost:8002/api/organisationUnits.json'], null)
+      assert.equal(findRoute(app, '/2.31/api/organisationUnits'), true)
+      assert.equal(findRoute(app, '/2.32/api/organisationUnits'), true)
+      // Default url route should be removed
+      assert.equal(findRoute(app, '/api/organisationUnits.json'), false)
       next()
     })
 
     it('should update the cron and routes with the new config twice', function (next) {
       Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
       Utils.updateConfig(app, config1.routes, config2.routes)
-      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'].cronTime.source, '* * * * *')
-      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/3'].cronTime.source, '* * * * *')
-      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/1'], null)
-      assert.equal(findRoute(app, '/api/sqlViews/3'), true)
-      assert.equal(findRoute(app, '/api/sqlViews/2'), true)
-      assert.equal(findRoute(app, '/api/sqlViews/1'), false)
+      assert.equal(Utils.cronJobs['http://localhost:8000/2.32/api/organisationUnits'].cronTime.source, '* * * * *')
+      assert.equal(Utils.cronJobs['http://localhost:8000/2.33/api/organisationUnits'].cronTime.source, '* * * * *')
+      assert.equal(Utils.cronJobs['http://localhost:8000/2.31/api/organisationUnits'], null)
+      assert.equal(findRoute(app, '/2.33/api/organisationUnits'), true)
+      assert.equal(findRoute(app, '/2.32/api/organisationUnits'), true)
+      assert.equal(findRoute(app, '/2.31/api/organisationUnits'), false)
       next()
     })
 
@@ -123,10 +125,10 @@ describe('Utils', function () {
       Utils.updateConfig(app, mediatorConfig.config.routes, config1.routes)
       Utils.updateConfig(app, config1.routes, config2.routes)
       Utils.updateConfig(app, config2.routes, config3.routes)
-      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/2'], null)
-      assert.equal(Utils.cronJobs['http://localhost:8000/api/sqlViews/3'].cronTime.source, '2 0 * * *')
-      assert.equal(findRoute(app, '/api/sqlViews/3'), true)
-      assert.equal(findRoute(app, '/api/sqlViews/2'), false)
+      assert.equal(Utils.cronJobs['http://localhost:8000/2.32/api/organisationUnits'], null)
+      assert.equal(Utils.cronJobs['http://localhost:8000/2.33/api/organisationUnits'].cronTime.source, '2 0 * * *')
+      assert.equal(findRoute(app, '/2.33/api/organisationUnits'), true)
+      assert.equal(findRoute(app, '/2.32/api/organisationUnits'), false)
       next()
     })
   })

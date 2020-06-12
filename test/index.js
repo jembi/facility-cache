@@ -10,7 +10,7 @@ const assert = require('assert')
 const facilityCache = require('../lib')
 const testConfig = require('../lib/config')
 
-const URL = 'http://admin:district@localhost:8001/api/sqlViews/1/data.json'
+const URL = 'http://admin:district@localhost:8001/api/organisationUnits.json'
 const EXPECTED_FACILITY = {
   code: '654321',
   displayName: 'za MomConnect Existing',

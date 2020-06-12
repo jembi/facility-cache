@@ -27,7 +27,7 @@
         }, {
           "param": "dhisPath",
           "displayName": "DHIS Path",
-          "description": "DHIS sql view path. NB! Please ensure that no two DHIS Path's are the same, as the cache will be overwritten by the other",
+          "description": "DHIS organisation unit path. NB! Please ensure that no two DHIS Path's are the same, as the cache will be overwritten by the other",
           "type": "string"
         }, {
           "param": "cronPattern",
@@ -47,7 +47,7 @@
     "routes": [
       {
         "dhisUrl": "http://admin:district@localhost:8002",
-        "dhisPath": "/api/sqlViews/1/data.json",
+        "dhisPath": "/api/organisationUnits.json",
         "cronPattern": "00 00 12 * * *",
         "cronTimezone": "Africa/Johannesburg"
       }
