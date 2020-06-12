@@ -1,10 +1,14 @@
-# facility-cache
+# Facility Cache
 
 [![Build Status](https://travis-ci.org/jembi/facility-cache.svg)](https://travis-ci.org/jembi/facility-cache)
 
 Compatible DHIS versions:
 
 * [![DHIS2.30 Build](https://img.shields.io/badge/DHIS-2.30-brightgreen.svg)](https://launchpad.net/dhis2/+milestone/2.30)
+* [![DHIS2.31 Build](https://img.shields.io/badge/DHIS-2.31-brightgreen.svg)](https://launchpad.net/dhis2/+milestone/2.31)
+* [![DHIS2.32 Build](https://img.shields.io/badge/DHIS-2.32-brightgreen.svg)](https://launchpad.net/dhis2/+milestone/2.32)
+* [![DHIS2.33 Build](https://img.shields.io/badge/DHIS-2.33-brightgreen.svg)](https://launchpad.net/dhis2/+milestone/2.33)
+* [![DHIS2.34 Build](https://img.shields.io/badge/DHIS-2.34-brightgreen.svg)](https://launchpad.net/dhis2/+milestone/2.34)
 
 Persistent cache for facility lookups.
 
