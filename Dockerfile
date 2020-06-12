@@ -1,8 +1,8 @@
-FROM node:carbon-slim
+FROM node:erbium-slim
 
 WORKDIR /opt/facility-cache
 
-COPY package.json npm-shrinkwrap.json ./
+COPY package.json package-lock.json ./
 
 RUN npm i
 
