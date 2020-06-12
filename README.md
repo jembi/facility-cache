@@ -43,7 +43,7 @@ Useful Flags:
 | --- | --- | --- |
 | **Server** | | |
 | SERVER_HOSTNAME | `localhost` | Mediator host address |
-| SERVER_PORT | `3500` | Mediator port number |
+| SERVER_PORT | `8001` | Mediator port number |
 | **OpenHIM** | | |
 | OPENHIM_USERNAME | `root@openhim.org` | OpenHIM API username |
 | OPENHIM_PASSWORD | `openhim-password` | OpenHIM API password |
