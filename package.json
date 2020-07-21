@@ -10,7 +10,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "codecov": "^3.7.0",
+    "codecov": "^3.7.1",
     "mocha": "^8.0.1",
     "nyc": "^15.1.0",
     "standard": "^14.3.4"
