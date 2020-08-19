@@ -24,17 +24,20 @@
           "displayName": "DHIS Url",
           "description": "DHIS url",
           "type": "string"
-        }, {
+        },
+        {
           "param": "dhisPath",
           "displayName": "DHIS Path",
-          "description": "DHIS organisation unit path. NB! Please ensure that no two DHIS Path's are the same, as the cache will be overwritten by the other",
+          "description": "DHIS organisation unit path. NB! Please ensure that no two DHIS Path's are the same, as the cache will be overwritten by the other. Do not include query params.",
           "type": "string"
-        }, {
+        },
+        {
           "param": "cronPattern",
           "displayName": "Cron Pattern",
           "description": "Cron pattern",
           "type": "string"
-        }, {
+        },
+        {
           "param": "cronTimezone",
           "displayName": "Cron Timezone",
           "description": "Timezone of the cron",
